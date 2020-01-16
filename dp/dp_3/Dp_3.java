@@ -46,9 +46,9 @@ public class Dp_3 {
 
     //2.dp
     /*
-     * 后一种稳定态由前一种稳定态的而来，i-1,j和i,j-1状态+1必得稳定态，i-1,j-1状态不动或+1都可能稳定，如果不稳定，再+1
-     * a[i] = b[j] --> S[i][j] = min(S[i-1][j]+1,S[i][j-1]+1,S[i-1][j-1]) //此处省略S[i-1][j-1]+1
-     * a[i] != b[j]--> S[i][j] = min(S[i-1][j]+1,S[i][j-1]+1,S[i-1][j-1]+1) //次数省略S[i-1][j-1] + 1 +1
+     * 后一种稳定态由前一种稳定态的而来，i-1,j和i,j-1状态到达i,j编辑次数必+1,i-1,j-1到达i,j分情况
+     * a[i] = b[j] --> S[i][j] = min(S[i-1][j]+1,S[i][j-1]+1,S[i-1][j-1]) //
+     * a[i] != b[j]--> S[i][j] = min(S[i-1][j]+1,S[i][j-1]+1,S[i-1][j-1]+1) //
      *
      */
     public int fMinEdistDp(char[] a, int n, char[] b, int m) {
@@ -107,9 +107,104 @@ public class Dp_3 {
     //--------------------------------------------------最长公共子串长度--------------------------------------------
     //添加，删除两种方式
 
-    //添加删除必得稳定态
+    //(i-1,j)和(i,j-1)通过删除，添加得到稳定态，长度不能+1，i-1,j-1到达i,j，如果a[i]==b[j]长度+1
     //a[i]==b[j] --> maxDist[i][j] = max(maxDist[i-1][j-1]+1,maxDist[i-1][j],maxDist[i][j-1])
     //a[i]!=b[j] --> maxDist[i][j] = max(maxDist[i-1][j-1],maxDist[i-1][j],maxDist[i][j-1])
+    public int maxDistDp(char[] a, int n, char[] b, int m) {
+        int[][] maxDist = new int[n][m];
+        //第一行特殊处理
+        for (int j = 0; j < m; j++) {
+            if (a[0] == b[j]) {
+                maxDist[0][j] = 1;//不能重复增加公共子串长度
+            } else if (j != 0) {//a[0] != b[j]且j不在第一行
+                maxDist[0][j] = maxDist[0][j - 1];
+            } else {
+                maxDist[0][j] = 0;
+            }
+        }
+        //第一列特殊处理
+        for (int i = 0; i < n; i++) {
+            if (a[i] == b[0]) {
+                maxDist[i][0] = 1;
+            } else if (i != 0) {
+                maxDist[i][0] = maxDist[i - 1][0];
+            } else {
+                maxDist[i][0] = 0;
+            }
+        }
+        //dp
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < n; j++) {
+                if (a[i] == b[j]) {
+                    maxDist[i][j] = max(maxDist[i - 1][j], maxDist[i][j - 1], maxDist[i - 1][j - 1] + 1);
+                } else {
+                    maxDist[i][j] = max(maxDist[i - 1][j], maxDist[i][j - 1], maxDist[i - 1][j - 1]);
+                }
+            }
+        }
 
+        return maxDist[n - 1][m - 1];
+
+    }
+
+    private int max(int x, int y, int z) {
+        int max = Integer.MIN_VALUE;
+        if (x > max)
+            max = x;
+        if (y > max)
+            max = y;
+        if (z > max)
+            max = z;
+        return max;
+    }
+
+
+    //---------------------------------------------------------思考--------------------------
+    /*
+    我们有一个数字序列包含 n 个不同的数字，
+    如何求出这个序列中的最长递增子序列长度？
+    比如 2, 9, 3, 6, 5, 1, 7 这样一组数字序列，它的最长递增子序列就是 2, 3, 5, 7，所以最长递增子序列的长度是 4。
+     */
+    //s[i] = a[i]之前所有比它小的元素的最长子序列长度+1
+    public int longestIncreaseSubArrayDP(int[] array) {
+        if (array.length < 2) return array.length;
+        int[] state = new int[array.length];
+        state[0] = 1;
+        for (int i = 1; i < state.length; i++) {
+            int max = 0;
+            for (int j = 0; j < i; j++) {
+                if (array[j] < array[i]) {
+                    if (state[j] > max) max = state[j];
+                }
+            }
+            state[i] = max + 1;
+        }
+        int result = 0;
+        for (int i = 0; i < state.length; i++) {
+            if (state[i] > result) result = state[i];
+        }
+        return result;
+    }
+
+    //s[i] = a[i]之前所有比它小的元素的最长子序列长度+1
+    public int longestIncreaseSubArrDP2(int[] arr,int n){
+        if(n<2)return n;
+        int[] states = new int[n];
+        states[0] =1;
+        for(int i=1;i<states.length;i++){
+            int max = 0;
+            for(int j=0;j<i;j++){
+                if(arr[j]<arr[i]){
+                    if(states[j]>max)max = states[j];
+                }
+            }
+            states[i] = max+1;
+        }
+        int result = 0;
+        for(int i=0;i<states.length;i++){
+            if(states[i]>result)result = states[i];
+        }
+        return result;
+    }
 
 }
