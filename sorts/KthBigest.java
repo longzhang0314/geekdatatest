@@ -5,7 +5,7 @@ public class KthBigest {
 
     public static void main(String[] args) {
         int[] arr = {22, 1, 4, 121, 4444, 0, -2, 3123};
-        int k = 9;
+        int k = 3;
         int kthBigest = getKthBigest(arr, k);
         System.out.println("第" + k + "大元素为：" + kthBigest);
     }

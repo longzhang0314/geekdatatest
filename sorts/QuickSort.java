@@ -17,7 +17,7 @@ public class QuickSort {
     private static int patition(int[] a, int p, int r) {
         //分区点选择最后一位
         int pivot = a[r];
-        //辅助指针i,i之前的数小于分区点
+        //辅助指针i,i之前的数小于分区点[p,i-1]是已处理区间
         int i = p;
         for (int j = p; j < r; j++) {
             if (a[j] <= pivot) {

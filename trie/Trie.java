@@ -6,8 +6,8 @@ package com.zl.geekdata.trie;
 public class Trie {
     class TrieNode{
         char data;
-        TrieNode[] children;
-        boolean isEndChar;
+        TrieNode[] children = new TrieNode[26];
+        boolean isEndChar = false;
         TrieNode(char data){
             this.data = data;
         }
@@ -20,6 +20,7 @@ public class Trie {
         for(int i=0;i<text.length;i++){
             int index = text[i] - 'a';
             if(p.children[index]==null){
+                //插入该字符
                 TrieNode newNode = new TrieNode(text[i]);
                 p.children[index] = newNode;
             }

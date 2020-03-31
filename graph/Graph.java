@@ -67,7 +67,8 @@ public class Graph {
     private void print(int[] prev, int s, int t) {
         //递归打印数组对应值的路径
         if (t != s && prev[t] != -1) {
-            print(prev, prev[s], t);
+            //要打印s->t，需要先打印s->t的前驱路径
+            print(prev, s, prev[t]);
         }
         System.out.print(t + " ");
     }
@@ -88,17 +89,22 @@ public class Graph {
 
 
     private void recurDfs(int w, int t, boolean[] visted, int[] prev) {
-        if (found) return;
+        //先判断是否找到了
+        if (found)
+            return;
+        //当前顶点已访问
         visted[w] = true;
-        if(w==t){
+        //如果找到了
+        if (w == t) {
             found = true;
             return;
         }
-        for(int i=0;i<adj[w].size();i++){
+        //没找到从顶点向下走
+        for (int i = 0; i < adj[w].size(); i++) {
             int q = adj[w].get(i);
-            if(!visted[q]){
+            if (!visted[q]) {
                 prev[q] = w;
-                recurDfs(q,t,visted,prev);
+                recurDfs(q, t, visted, prev);
             }
         }
     }

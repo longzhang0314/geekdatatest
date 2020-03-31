@@ -4,9 +4,12 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Create by zhanglong on 2020/1/3
+ * Create by zhanglong on 2020/2/24
  */
 public class Graph2 {
+
+    public static void main(String[] args) {
+    }
 
     private int v;
     private LinkedList<Integer>[] adj;
@@ -14,69 +17,78 @@ public class Graph2 {
     public Graph2(int v) {
         this.v = v;
         this.adj = new LinkedList[v];
+        for (int i = 0; i < v; i++) {
+            adj[i] = new LinkedList<>();
+        }
     }
 
-    public void addEdge2(int s,int t){
+    public void addEage(int s, int t) {
         adj[s].add(t);
         adj[t].add(s);
     }
 
-    public void bfs2(int s,int t){
-        if(s==t)return;
+    public void bfs(int s, int t) {
+        if (s == t)
+            return;
         boolean[] visted = new boolean[v];
-        visted[s] = true;
         Queue<Integer> queue = new LinkedList<>();
-        queue.add(s);
         int[] prev = new int[v];
-        for(int i=0;i<v;i++){
+        visted[s] = true;
+        queue.offer(s);
+        for (int i = 0; i < v; i++) {
             prev[i] = -1;
         }
-        while (queue.size() != 0){
+
+        while (!queue.isEmpty()) {
             int w = queue.poll();
-            for(int i=0;i<adj[w].size();i++){
+            for (int i = 0; i < adj[w].size(); i++) {
                 int q = adj[w].get(i);
-                if(!visted[q]){
+                if (!visted[q]) {
                     prev[q] = w;
-                    if(q==t){
-                        print2(prev,s,t);
+                    if (q == t) {
+                        print(s, t, prev);
                         return;
                     }
                     visted[q] = true;
-                    queue.add(q);
+                    queue.offer(q);
                 }
             }
         }
+
     }
 
-    private void print2(int[] prev, int s, int t) {
-        if(prev[t] != -1 && s != t){
-            print2(prev,s,prev[t]);
+    private void print(int s, int t, int[] prev) {
+        if (s != t && prev[t] != -1) {
+            print(s, prev[t], prev);
         }
-        System.out.print(t+" ");
+        System.out.print(t + " ");
     }
 
-    boolean found2 = false;
-    public void dfs2(int s,int t){
-        if(s==t)return;
-        found2 = false;
+    boolean found  = false;
+
+    public void dfs(int s, int t) {
+        found = false;
         boolean[] visted = new boolean[v];
-        visted[s] = true;
         int[] prev = new int[v];
-        for(int i=0;i<v;i++){
+        for (int i = 0; i < v; i++) {
             prev[i] = -1;
         }
-        recurDfs(s,t,visted,prev);
-        print2(prev,s,t);
+        recurDfs(s, t, visted, prev);
+        print(s, t, prev);
     }
 
     private void recurDfs(int w, int t, boolean[] visted, int[] prev) {
-        if(found2)return;
+        if (found) return;
         visted[w] = true;
-        for(int i=0;i<adj[w].size();i++){
+        if (w == t) {
+            found = true;
+            return;
+        }
+        for (int i = 0; i < adj[w].size(); i++) {
             int q = adj[w].get(i);
-            if(!visted[q]){
+            if (!visted[q]) {
                 prev[q] = w;
-                recurDfs(q,t,visted,prev);
+                recurDfs(q, t, visted, prev);
             }
         }
     }

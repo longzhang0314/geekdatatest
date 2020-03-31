@@ -18,32 +18,31 @@ public class CountSortTest {
 
 
     public static void countSort(int[] a, int n) {
-        if(n<=1)return;
-        //找到最大值，默认正数
-        int max = a[0];
-        for(int i=1;i<n;i++){
-            if(a[i]>max){
-                max = a[i];
-            }
+        if (n <= 1) return;
+        int max = 0;
+        //计算出最大值是多少，方便开辟计数数组的大小
+        for (int i = 0; i <  n; i++) {
+            max = Math.max(max, a[i]);
         }
-        int[] c = new int[max+1];
-        //先统计每个值各有几个
-        for(int i=0;i<n;i++){
+        int[] c = new int[max + 1];
+        //计数数组赋值
+        for (int i = 0; i < n; i++) {
             c[a[i]]++;
         }
-        //在统计小于等于的值有几个
-        for(int i=1;i<=max;i++){
-            c[i] = c[i-1]+c[i];
+        //计数数组特殊处理，每个位置存储小于等于该值的所有元素
+        for (int i = 1; i <= max; i++) {
+            c[i] = c[i - 1] + c[i];
         }
-        //有序临时数组
+        //临时数组存储排好序的元素
         int[] r = new int[n];
-        //从a中拿数据去c中查找索引，在r中赋值
-        for(int i=n-1;i>=0;i--){
-            int index = --c[a[i]];
+        //遍历原数组，寻找计数数组中的排序，并赋值到r
+        for (int i = n - 1; i >= 0; i--) {
+            int index = c[a[i]] - 1;
             r[index] = a[i];
+            c[a[i]]--;
         }
-        //赋值回a
-        for(int i=0;i<n;i++){
+        //r数组赋值回原数组
+        for (int i = 0; i < n; i++) {
             a[i] = r[i];
         }
 
