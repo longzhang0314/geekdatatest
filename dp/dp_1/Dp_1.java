@@ -164,13 +164,13 @@ public class Dp_1 {
         }
         status[0] = 0;
         if (items[0] <= w) {
-            status[items[0]] = 0;
+            status[items[0]] = values[0];
         }
         for (int i = 0; i < n; i++) {
             //放入
             for (int j = w - items[i]; j >= 0; j--) { //防止影响同一层对上一层是否决策的判定
                 if (status[j] >= 0) { //上一层已经决策过
-                    int curV = status[j] + status[items[i]];//计算值
+                    int curV = status[j] + values[i];//计算值
                     if (curV > status[j + items[i]]) { //计算值>本层查找值
                         status[j + items[i]] = curV;
                     }
